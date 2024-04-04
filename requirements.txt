@@ -1,2 +1,4 @@
+gensim
 nltk
 pandas
+scipy==1.12  # gensim 4.3.2 is not compatible with scipy 1.13
