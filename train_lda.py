@@ -19,7 +19,7 @@ def main():
   parser.add_argument("--min-docs", type=int, default=5,
                       help="Minimum number of documents a word must appear in to be included.")
   
-  parser.add_argument("--num-topics", type=int, default=20,
+  parser.add_argument("--num-topics", type=int, default=5,
                       help="Number of topics for LDA algorithm to split documents into.")
   parser.add_argument("--num-passes", type=int, default=50)
   parser.add_argument("--num-interations", type=int, default=50)
@@ -33,11 +33,11 @@ def main():
   id2word = gensim.corpora.Dictionary(docs.values())
   # Filter out the most common and uncommon words.
   id2word.filter_extremes(no_below=5, no_above=0.5)
-  corpus = {doc_id: id2word.doc2bow(doc) for doc_id, doc in docs.items()}
-  log(f"Loaded {len(corpus):_d} documents with {len(id2word):_d} unique words")
+  bow_corpus = {doc_id: id2word.doc2bow(doc) for doc_id, doc in docs.items()}
+  log(f"Loaded {len(bow_corpus):_d} documents with {len(id2word):_d} unique words")
   
   log(f"Training LDA model with {args.num_topics:_d} topics, {args.num_passes:_d} passes, and {args.num_interations:_d} iterations.")
-  lda_model = gensim.models.LdaModel(corpus.values(), id2word=id2word, alpha="auto",
+  lda_model = gensim.models.LdaModel(bow_corpus.values(), id2word=id2word, alpha="auto",
     random_state=args.seed, num_topics=args.num_topics, passes=args.num_passes, iterations=args.num_interations)
 
   lda_model.save(str(args.out_model))

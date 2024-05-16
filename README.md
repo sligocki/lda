@@ -15,6 +15,8 @@ python setup.py
 
 python text_to_json.py
 python clean_data.py
-python remove_high_low_freq.py
+python train_lda.py
+python describe_lda.py data/lda_model
 
+python remove_high_low_freq.py
 python ngram_freq.py data/words_clean.json data/ngrams/
