@@ -40,6 +40,7 @@ def main():
     docs = json.load(f)
   bow_corpus_dict = {doc_id: lda_model.id2word.doc2bow(doc) for doc_id, doc in docs.items()}
   bow_corpus = list(bow_corpus_dict.values())
+  texts = list(docs.values())
 
   log("Top words per topic:")
   for topic_id in range(lda_model.num_topics):
@@ -55,8 +56,7 @@ def main():
 
   log(f"Perplexity: {lda_model.log_perplexity(bow_corpus):.6f}")
   
-  coherence_model = gensim.models.CoherenceModel(
-    model=lda_model, texts=bow_corpus, dictionary=lda_model.id2word, coherence="c_v", topn=20)
+  coherence_model = gensim.models.CoherenceModel(lda_model, texts=texts, coherence="c_v")
   log(f"C_v coherence: {coherence_model.get_coherence():.6f}")
 
 if __name__ == "__main__":
